@@ -1,56 +1,39 @@
 const fs = require('fs/promises');
 const path = require('path');
 const crypto = require('crypto');
-const { takeCoverage } = require('v8');
 const contactsPath = path.resolve('./db/contacts.json');
+const chalk = require('chalk');
 
-const getData = async() => {
+const listContacts = async() => {
   let data= null
-  try {
     data = await fs.readFile(contactsPath, 'utf8')
-  } catch (error) {
-    data ={}
-  }
-  if (data === void 0) {
-    console.log('unknown command')
-    return 
-  }
-  const contacts = JSON.parse(data)
-  return contacts
-  
-}
-
-const listContacts = async () => {
-  const contacts =  await getData()
+    const contacts = JSON.parse(data)
     return contacts
 }
 
 const getContactById = async (contactId) => {
-    const contacts =  await getData()
+    const contacts =  await listContacts()
     const contact = contacts.find(item => item.id === Number(contactId))
   if (contact === void 0) {
-    message = `no contact by id ${contactId}`
-    console.log(`no contact by id ${contactId}`)
-    return message
+    const message = `no contact by id ${contactId}`
+    console.log(chalk.red(message))
+    return
   }
     return contact
 }
 
 const removeContact = async(contactId) => {
-   const contacts =  await getData()
-    const delContact = contacts.filter(item => item.id !== Number(contactId))
-  if (delContact === void 0) {
-    message = `no contact by id ${contactId}`
-    console.log(`no contact by id ${contactId}`)
-    return message
+  const contact = await getContactById(contactId)
+  if (contact === void 0) {
+    return
   }
-  await fs.writeFile(contactsPath, JSON.stringify(delContact, null, 2))
-    return await getData()
+  await fs.writeFile(contactsPath, JSON.stringify(contact, null, 2))
+    return await listContacts()
   
 }
 
 const addContact = async (name, email, phone) => {
-  const contacts = await getData()
+  const contacts = await listContacts()
   const newContact = {
     id: crypto.randomInt(0,100000),
     name,

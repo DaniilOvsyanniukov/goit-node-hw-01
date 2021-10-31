@@ -24,8 +24,9 @@ const argv = program.opts();
             break;
       
           case 'get':
-                const getContact = await getContactById(id)
-                console.log(chalk.green('Find your contact'))
+            const getContact = await getContactById(id)
+            if(getContact === void 0){ return }
+                console.log(chalk.green('Your contact is find'))
                 console.table(getContact)
             break;
       
@@ -36,7 +37,8 @@ const argv = program.opts();
             break;
       
           case 'remove':
-                const remContacts = await removeContact(id)
+            const remContacts = await removeContact(id)
+            if(remContacts === void 0){ return }
                 console.log(chalk.red(`Contact with id:${id}was deleted`))
                 console.table(remContacts)
             break;
