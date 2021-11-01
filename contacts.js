@@ -5,30 +5,23 @@ const contactsPath = path.resolve('./db/contacts.json');
 const chalk = require('chalk');
 
 const listContacts = async() => {
-  let data= null
-    data = await fs.readFile(contactsPath, 'utf8')
-    const contacts = JSON.parse(data)
-    return contacts
+  const contacts = await fs.readFile(contactsPath, 'utf8')
+  return JSON.parse(contacts)
+
 }
 
 const getContactById = async (contactId) => {
-    const contacts =  await listContacts()
-    const contact = contacts.find(item => item.id === Number(contactId))
-  if (contact === void 0) {
-    const message = `no contact by id ${contactId}`
-    console.log(chalk.red(message))
-    return
-  }
-    return contact
+  const contacts = await listContacts()
+  const contact = contacts.find(item => item.id === Number(contactId))
+  return contact
 }
 
-const removeContact = async(contactId) => {
+const removeContact = async (contactId) => {
   const contact = await getContactById(contactId)
-  if (contact === void 0) {
-    return
-  }
-  await fs.writeFile(contactsPath, JSON.stringify(contact, null, 2))
-    return await listContacts()
+  const contacts= await listContacts()
+  newContactList= contacts.filter(item => item.id !== Number(contactId))
+  await fs.writeFile(contactsPath, JSON.stringify(newContactList, null, 2))
+    return contact
   
 }
 

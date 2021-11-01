@@ -19,15 +19,19 @@ const argv = program.opts();
         
         switch (action) {
           case 'list':
-                const contacnts = await listContacts()
-                console.table(contacnts)
+                const contacts = await listContacts()
+                console.table(contacts)
             break;
       
           case 'get':
-            const getContact = await getContactById(id)
-            if(getContact === void 0){ return }
+            const сontact = await getContactById(id)
+            if (сontact === void 0) {
+                   const message = `no contact by id ${id}`
+                   console.log(chalk.red(message))
+              return
+            }
                 console.log(chalk.green('Your contact is find'))
-                console.table(getContact)
+                console.table(сontact)
             break;
       
           case 'add':
@@ -37,10 +41,14 @@ const argv = program.opts();
             break;
       
           case 'remove':
-            const remContacts = await removeContact(id)
-            if(remContacts === void 0){ return }
-                console.log(chalk.red(`Contact with id:${id}was deleted`))
-                console.table(remContacts)
+            const remContact = await removeContact(id)
+            if (remContact === void 0) {
+              const message = `no contact by id ${id}`
+              console.log(chalk.red(message))
+              return
+            }
+                console.log(chalk.red(`Contact with id: ${id} was deleted`))
+                console.table(remContact)
             break;
       
           default:
